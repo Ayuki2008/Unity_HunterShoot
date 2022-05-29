@@ -19,9 +19,10 @@ public class LearnData : MonoBehaviour
      * 欄位 field (儲存各種資料)
      * 
      * 欄位語法:
-     * 資料類型 欄位自訂名稱 結束符號;
+     * 資料類型 欄位自訂名稱 指定 值 結束符號;
+     * 指定 值 可以省略，會以預設值，數值預設值 0 ，字串空，布林值 false
      */
-    int hp; //定義一筆整數資料(int) 名稱叫做 hp
+    int hp; // 定義一筆整數資料(int) 名稱叫做 hp
 
     /*
      * 資料類型:四大基本類型
@@ -31,10 +32,11 @@ public class LearnData : MonoBehaviour
      * 布林值:保存有&沒有 bool
      */
 
-    int lv;
-    float exp;
-    string playerName; //如果有兩個單字以上，第二個單字後大寫
-    bool hasCureSkill; //是否有治癒技能
+    // = 指定符號，將右邊的值賦予左邊
+    int lv = 10;
+    float exp = 0.001f; // 浮點數必須加上 f 後綴，大小 F 皆可
+    string playerName = "@Snow123阿雪"; // 字串必須使用雙引號
+    bool hasCureSkill = true; // 是否有治癒技能
 }
 
 // 非 LearnData 類別成員區域

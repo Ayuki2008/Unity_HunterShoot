@@ -32,7 +32,7 @@ public class Car : MonoBehaviour
     [Tooltip("汽車的重量，單位是噸。")]
     public int weight = 3; // 重量
 
-    [Header("汽車的高度"), Range(1, 10)]
+    [Header("汽車的高度"), Range(1, 10)] // 兩個屬性一起寫
     public float height = 3.5f; // 高度
 
     [Header("汽車的品牌名稱")]
