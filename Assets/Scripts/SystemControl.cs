@@ -18,11 +18,21 @@ namespace SH
         public GameObject ball;  
         [Header("彈珠可發射的總數"), Range(0, 100)]
         public int canShootBallTotal = 15;
+        [Header("彈珠生成點")]
+        public Transform traSpawnPoint;
+        [Header("攻擊參數名稱")]
+        public string parAttack = "觸發攻擊";
+
+        public Animator ani;
         #endregion
 
         #region 事件
+        private void Update()
+        {
+            ShootBall();
+        }
         #endregion
-        
+
         #region 方法
         /// <summary>
         /// 旋轉角色，讓角色面向滑鼠的位置
@@ -37,7 +47,17 @@ namespace SH
         /// </summary> 
         private void ShootBall()
         {
+            //放開 滑鼠左鍵 生成並發射彈珠
+            if (Input.GetKeyUp(KeyCode.Mouse0))//Mouse1右 Mouse2中
 
+            {
+                print("放開左鍵！");
+
+                // Object 類別可省略不寫
+                // 直接透過 Object 成員名稱使用
+                // 生成 彈珠;
+                Instantiate(ball, traSpawnPoint.position, Quaternion.identity);
+            }
         }
 
         /// <summary>
