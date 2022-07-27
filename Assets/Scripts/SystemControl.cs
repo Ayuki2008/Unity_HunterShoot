@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 //命名空間 namespace 空間名稱 { 該空間的內容 }
 namespace SH
@@ -27,20 +28,48 @@ namespace SH
         public float speedBall = 1000;
         [Header("彈珠發射間隔"), Range(0, 2)]
         public float intervalBall = 0.5f;
+        [Header("彈珠數量")]
+        public TextMeshProUGUI textBallCount;
 
         public Animator ani;
+
+        /// <summary>
+        /// 能否發射彈珠
+        /// </summary>
+        private bool canShootBall = true;
+        /// <summary>
+        /// 轉換滑鼠用攝影機
+        /// </summary>
+        private Camera cameraMouse;
+        /// <summary>
+        /// 座標轉換後實體物件
+        /// </summary>
+        private Transform traMouse;
         #endregion
 
         #region 事件
         // Awake 在 Start 之前執行一次
         private void Awake()
         {
-            ani = GetComponent<Animator>();    
+            ani = GetComponent<Animator>();
+
+            textBallCount.text = "x" + canShootBallTotal;
+
+            cameraMouse = GameObject.Find("轉換滑鼠用攝影機").GetComponent<Camera>();
+
+            // traMouse = GameObject.Find("轉化滑鼠用實體物件").GetComponent<Transform>();
+            traMouse = GameObject.Find("座標轉換後實體物件").transform;
+
+            // 物理 忽略圖層碰撞(圖層1，圖層2)
+            Physics.IgnoreLayerCollision(3, 3);
         }
         private void Update()
         {
             ShootBall();
+            TurnCharacter();
         }
+
+        
         #endregion
 
         #region 方法
@@ -49,7 +78,23 @@ namespace SH
         /// </summary> 
         private void TurnCharacter()
         {
+            // 如果 不能發射 就跳出
+            if (!canShootBall) return;
+            // 1. 滑鼠座標
+            Vector3 posMouse = Input.mousePosition;
+            print("<color=yellow>滑鼠座標：" + posMouse + "</color>");
+            // 跟攝影機的 Y 軸一樣
+            posMouse.z = 25;
 
+            // 2. 滑鼠座標轉為世界座標
+            Vector3 pos = cameraMouse.ScreenToWorldPoint(posMouse);
+            // 將轉換完的世界座標高度設定為角色的高度
+            pos.y = 0.5f;
+            // 3. 世界座標給實體物件
+            traMouse.position = pos;
+
+            // 此物件的變形.面向(座標轉換後實體物件)
+            transform.LookAt(traMouse);
         }
 
         /// <summary>
@@ -57,6 +102,9 @@ namespace SH
         /// </summary> 
         private void ShootBall()
         {
+            // 如果 不能發射彈珠 就跳出
+            if (!canShootBall) return;
+
             // 按下 滑鼠左鍵 顯示 箭頭
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -64,12 +112,13 @@ namespace SH
             }
             // 放開 滑鼠左鍵 生成並發射彈珠
             else if (Input.GetKeyUp(KeyCode.Mouse0))//Mouse1右 Mouse2中
-
             {
-                print("放開左鍵！");
+                // 不能發射彈珠
+                canShootBall = false;
+
+                // print("放開左鍵！");
                 arrow.SetActive(false);
-                StartCoroutine(SpawnBall());
-                
+                StartCoroutine(SpawnBall());               
             }
         }
         /// <summary>
@@ -79,6 +128,8 @@ namespace SH
         {
             for (int i = 0; i < canShootBallTotal; i++)
             {
+                int total = canShootBallTotal;
+
                 ani.SetTrigger(parAttack);
 
                 // Object 類別可省略不寫
@@ -89,6 +140,11 @@ namespace SH
                 // 暫存彈珠 取得鋼體元件 添加推力 (角色.前方 * 速度)
                 // transform.forward 角色的前方
                 tempBall.GetComponent<Rigidbody>().AddForce(transform.forward * speedBall);
+
+                total--;
+
+                if (total > 0) textBallCount.text = "x" + total;
+                else if (total == 0) textBallCount.text = "";
 
                 yield return new WaitForSeconds(intervalBall);
             }
