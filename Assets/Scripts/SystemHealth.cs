@@ -9,6 +9,7 @@ namespace SH
     /// </summary>
     public class SystemHealth : MonoBehaviour
     {
+        #region 資料
         [SerializeField, Header("畫布傷害物件")]
         private GameObject goDamage;
         [SerializeField, Header("圖片血量")]
@@ -22,11 +23,15 @@ namespace SH
 
         private float hp;
         private string parDamage = "觸發受傷";
+        #endregion
+
+        private SystemSpawn systemSpawn;
 
         private void Awake()
         {
             hp = dataEnemy.hp;
             textHp.text = hp.ToString();
+            systemSpawn = GameObject.Find("生成怪物系統").GetComponent<SystemSpawn>();
         }
 
         /* 碰撞事件
@@ -45,7 +50,7 @@ namespace SH
 
         private void GetDamage()
         {
-            float getDamage = 50;
+            float getDamage = 100;
             hp -= getDamage;
             textHp.text = hp.ToString();
             imgHp.fillAmount = hp / dataEnemy.hp;
@@ -62,7 +67,9 @@ namespace SH
         ///</summary>
         private void Dead()
         {
-            print("死亡");
+            //print("死亡");
+            Destroy(gameObject);
+            systemSpawn.totalCountEnemyLive--;
         }
     }
 }

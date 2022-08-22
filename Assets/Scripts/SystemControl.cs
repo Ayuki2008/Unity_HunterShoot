@@ -31,12 +31,13 @@ namespace SH
         [Header("彈珠數量")]
         public TextMeshProUGUI textBallCount;
 
-        public Animator ani;
-
         /// <summary>
         /// 能否發射彈珠
         /// </summary>
-        private bool canShootBall = true;
+        [HideInInspector]
+        public bool canShootBall = true;
+        
+        public Animator ani;
         /// <summary>
         /// 轉換滑鼠用攝影機
         /// </summary>
@@ -82,7 +83,7 @@ namespace SH
             if (!canShootBall) return;
             // 1. 滑鼠座標
             Vector3 posMouse = Input.mousePosition;
-            print("<color=yellow>滑鼠座標：" + posMouse + "</color>");
+            // print("<color=yellow>滑鼠座標：" + posMouse + "</color>");
             // 跟攝影機的 Y 軸一樣
             posMouse.z = 25;
 

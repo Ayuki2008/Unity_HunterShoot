@@ -16,6 +16,11 @@ namespace SH
 
         [SerializeField]
         private List<Transform> listSeconPlace = new List<Transform>();
+
+        /// <summary>
+        /// 怪物與可以吃的彈珠存活總數
+        /// </summary>
+        public int totalCountEnemyLive;
         #endregion
 
         #region 事件
@@ -29,7 +34,7 @@ namespace SH
         /// <summary>
         /// 生成隨機敵人
         /// </summary>
-        private void SpawnRandomEnemy()
+        public void SpawnRandomEnemy()
         {
             int min = 2;
             int max = traSecondPlace.Length;
@@ -76,7 +81,9 @@ namespace SH
                         listSeconPlace[i].position,
                         Quaternion.identity);
                 }
-                
+
+                totalCountEnemyLive++;
+                print("怪物與彈珠的數量" + totalCountEnemyLive);
             }
         }
 
