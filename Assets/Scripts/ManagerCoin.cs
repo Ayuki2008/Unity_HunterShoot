@@ -15,11 +15,11 @@ namespace SH
         /// <summary>
         /// 金幣總數
         /// </summary>
-        private int totalCion;
+        private int totalCoin;
 
         private void Awake()
         {
-            textCoin = GameObject.Find("金幣數量").GetComponent<TextMeshProUGUI>();
+            textCoin = GameObject.Find("金幣數目").GetComponent<TextMeshProUGUI>();
         }
 
         /// <summary>
@@ -27,8 +27,8 @@ namespace SH
         /// </summary>
         public void AddCoinAndUpdateUI()
         {
-            totalCion++;
-            textCoin.text = totalCion.ToString();
+            totalCoin++;
+            textCoin.text = totalCoin.ToString();
         }
     }
 }

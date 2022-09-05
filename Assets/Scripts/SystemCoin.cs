@@ -61,7 +61,7 @@ namespace SH
             DestoryCoin();
         }
 
-        /// <summary>
+        /// <summary>   
         /// §R°£ª÷¹ô
         /// </summary>
         private void DestoryCoin()

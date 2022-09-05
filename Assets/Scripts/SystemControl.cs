@@ -127,9 +127,10 @@ namespace SH
         /// </summary>
         private IEnumerator SpawnBall()
         {
+            int total = canShootBallTotal;
             for (int i = 0; i < canShootBallTotal; i++)
             {
-                int total = canShootBallTotal;
+                
 
                 ani.SetTrigger(parAttack);
 

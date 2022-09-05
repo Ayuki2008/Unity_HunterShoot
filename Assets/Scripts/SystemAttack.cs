@@ -1,0 +1,29 @@
+using UnityEngine;
+
+namespace SH 
+{
+    /// <summary>
+    /// §ðÀ»¨t²Î
+    /// </summary>
+    public class SystemAttack : MonoBehaviour
+    {
+        [SerializeField, Header("§ðÀ»¸ê®Æ")]
+        private DataAttack dataAttack;
+
+        /// <summary>
+        /// §ðÀ»¼Æ­È
+        /// </summary>
+        public float valueAttack;
+
+        private void Awake()
+        {
+            // §ðÀ»¼Æ­È = §ðÀ» + ½d³ò(-§ðÀ»¯B°Ê¡A+§ðÀ»¯B°Ê)
+            // ¨Ò¦p¡G§ðÀ»¼Æ­È = 100 + (-10,10)¡G½d³ò¸¨¦b 90 ~ 110
+            valueAttack = dataAttack.attack +
+                Random.Range(-dataAttack.attackFloat, dataAttack.attackFloat);
+
+            valueAttack = Mathf.Floor(valueAttack);
+        }
+    }
+}
+

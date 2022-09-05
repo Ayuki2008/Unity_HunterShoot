@@ -25,7 +25,25 @@ namespace SH
         private string parDamage = "觸發受傷";
         #endregion
 
+        /// <summary>
+        /// 碰到會受傷的物件名稱
+        /// </summary>
+        [SerializeField, Header("碰到會受傷的物件名稱")]
+        private string nameHurtObject;
+
+        [Header("玩家接收傷害區域")]
+        [SerializeField] private Vector3 v3DamageSize;
+        [SerializeField] private Vector3 v3DamagePosition;
+        [SerializeField, Header("接收傷害的圖層")]
+        private LayerMask layerDamage;
+
         private SystemSpawn systemSpawn;
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = new Color(0.2f, 1, 0.2f, 0.5f);
+            Gizmos.DrawCube(v3DamagePosition, v3DamageSize);
+        }
 
         private void Awake()
         {
@@ -34,6 +52,10 @@ namespace SH
             systemSpawn = GameObject.Find("生成怪物系統").GetComponent<SystemSpawn>();
         }
 
+        private void Update()
+        {
+            CheckObjectInDamageArea();
+        }
         /* 碰撞事件
          * 1. 兩個物件必須有一個帶有 Rigidbody
          * 2. 兩個物件必須有碰撞器 Collider
@@ -43,11 +65,24 @@ namespace SH
 
         private void OnCollisionEnter(Collision collision)
         {
-            // print("碰撞到物件：" + collision.gameObject);
-
-            GetDamage();
+            if (collision.gameObject.name.Contains(nameHurtObject)) GetDamage();
         }
 
+        /// <summary>
+        /// 檢查物件是否進入受傷區域
+        /// </summary>
+        private void CheckObjectInDamageArea() 
+        {
+            Collider[] hits = Physics.OverlapBox(
+                v3DamagePosition, v3DamageSize / 2,
+                Quaternion.identity, layerDamage);
+            
+            if (hits.Length > 0)
+            {
+                GetDamage();
+                Destroy(hits[0].gameObject);
+            }
+        }
         private void GetDamage()
         {
             float getDamage = 100;

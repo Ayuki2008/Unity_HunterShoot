@@ -8,12 +8,13 @@ namespace SH
     /// </summary>
     public class SystemTurn : MonoBehaviour
     {
+        #region 資料
+
         /// <summary>
         /// 敵人回合
         /// </summary>
         public UnityEvent onTurnEnemy;
 
-        #region 資料
         private SystemControl systemControl;
         private SystemSpawn systemSpawn;
         private RecycleArea recycleArea;
@@ -30,9 +31,12 @@ namespace SH
         /// 回收彈珠數量
         /// </summary>
         private int totalRecyeleBall;
-        #endregion
 
         private bool canSpawn = true;
+
+        #endregion
+
+        private int countBallEat;
 
         private void Awake()
         {
@@ -51,11 +55,11 @@ namespace SH
             totalCountBall = systemControl.canShootBallTotal;
 
             totalRecyeleBall++;
-            print("彈珠回收數量：" + totalRecyeleBall);
+            //print("彈珠回收數量：" + totalRecyeleBall);
 
             if(totalRecyeleBall == totalCountBall)
             {
-                print("回收完畢，換敵人回合");
+                //print("回收完畢，換敵人回合");
                 onTurnEnemy.Invoke();
             }
         }
@@ -80,6 +84,19 @@ namespace SH
             systemControl.canShootBall = true;
             canSpawn = true;
             totalRecyeleBall = 0;
+
+            #region 彈珠數量處理
+            systemControl.canShootBallTotal += countBallEat;
+            countBallEat = 0;
+            #endregion
+        }
+
+        /// <summary>
+        /// 吃到彈珠數量遞增
+        /// </summary>
+        public void BallEat() 
+        {
+            countBallEat++;
         }
     }
 }
