@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 namespace SH
 {
@@ -34,18 +35,36 @@ namespace SH
 
         private bool canSpawn = true;
 
+        private int countBallEat;
+
+        /// <summary>
+        /// 層數數字
+        /// </summary>
+        private TextMeshProUGUI textFloorCount;
+        private int countFloor = 1;
+
+        [SerializeField, Header("當前層數最大值"), Range(1, 100)]
+        private int countFloorMax = 50;
+        private bool isFloorCountMax;
+
         #endregion
 
-        private int countBallEat;
+        private SystemFinal systemFinal;
 
         private void Awake()
         {
             systemControl = GameObject.Find("狗").GetComponent<SystemControl>();
             systemSpawn = GameObject.Find("生成怪物系統").GetComponent<SystemSpawn>();
             recycleArea = GameObject.Find("回收區域").GetComponent<RecycleArea>();
+            textFloorCount = GameObject.Find("層數數字").GetComponent<TextMeshProUGUI>();
 
             recycleArea.onRecyele.AddListener(RecyeleBall);
+
+            systemFinal = FindObjectOfType<SystemFinal>();
         }
+
+        [SerializeField, Header("沒有移動物件並且延遲生成的時間"), Range(0, 3)]
+        private float noMoveObjectAndDelaySpawn = 1;
 
         /// <summary>
         /// 回收彈珠
@@ -61,18 +80,27 @@ namespace SH
             {
                 //print("回收完畢，換敵人回合");
                 onTurnEnemy.Invoke();
+
+                // 如果沒有敵人就移動結束並生成敵人與彈珠
+                if (FindObjectsOfType<SystemMove>().Length == 0)
+                {
+                    systemFinal.ShowFinalAndUpdateSubTitle("COMPLETE");
+                }
             }
         }
 
         /// <summary>
         /// 移動結束後生成敵人與彈珠
         /// </summary>
-        public void MoveEndSpawnEnemy()
+        public void MoveEndBallEnemy()
         {
             if (!canSpawn) return;
-
-            canSpawn = false;
-            systemSpawn.SpawnRandomEnemy();
+            if (!isFloorCountMax)
+            {
+                canSpawn = false;
+                systemSpawn.SpawnRandomEnemy();
+            }
+            
             Invoke("PlayerTurn", 1);
         }
 
@@ -89,6 +117,20 @@ namespace SH
             systemControl.canShootBallTotal += countBallEat;
             countBallEat = 0;
             #endregion
+            if (countFloor < countFloorMax)
+            {
+                countFloor++;
+                textFloorCount.text = countFloor.ToString();
+            }
+            if (countFloor == countFloorMax) isFloorCountMax = true;
+
+            if (isFloorCountMax)
+            {
+                if (FindObjectsOfType<SystemMove>().Length == 0)
+                {
+                    print("挑戰成功");
+                }
+            }
         }
 
         /// <summary>

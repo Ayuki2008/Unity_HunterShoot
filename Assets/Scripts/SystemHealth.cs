@@ -36,8 +36,11 @@ namespace SH
         [SerializeField] private Vector3 v3DamagePosition;
         [SerializeField, Header("接收傷害的圖層")]
         private LayerMask layerDamage;
+        [SerializeField, Header("是否為玩家")]
+        private bool isPlayer;
 
         private SystemSpawn systemSpawn;
+        private SystemFinal systemFinal;
 
         private void OnDrawGizmos()
         {
@@ -50,6 +53,7 @@ namespace SH
             hp = dataEnemy.hp;
             textHp.text = hp.ToString();
             systemSpawn = GameObject.Find("生成怪物系統").GetComponent<SystemSpawn>();
+            systemFinal = FindObjectOfType<SystemFinal>();
         }
 
         private void Update()
@@ -65,7 +69,8 @@ namespace SH
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.name.Contains(nameHurtObject)) GetDamage();
+            if (collision.gameObject.name.Contains(nameHurtObject))
+                GetDamage(collision.gameObject.GetComponent<SystemAttack>().valueAttack);
         }
 
         /// <summary>
@@ -79,13 +84,12 @@ namespace SH
             
             if (hits.Length > 0)
             {
-                GetDamage();
+                GetDamage(hits[0].GetComponent<SystemAttack>().valueAttack);
                 Destroy(hits[0].gameObject);
             }
         }
-        private void GetDamage()
+        private void GetDamage(float getDamage)
         {
-            float getDamage = 100;
             hp -= getDamage;
             textHp.text = hp.ToString();
             imgHp.fillAmount = hp / dataEnemy.hp;
@@ -102,11 +106,14 @@ namespace SH
         ///</summary>
         private void Dead()
         {
-            //print("死亡");
-            Destroy(gameObject);
-            systemSpawn.totalCountEnemyLive--;
-
-            DropCoin();
+            if (isPlayer) systemFinal.ShowFinalAndUpdateSubTitle("OVER");
+            else
+            {
+                Destroy(gameObject);
+                systemSpawn.totalCountEnemyLive--;
+                DropCoin();
+            }
+            
         }
 
         /// <summary>

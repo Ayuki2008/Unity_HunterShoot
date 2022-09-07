@@ -34,7 +34,7 @@ namespace SH
 
             yield return new WaitForSeconds(1.5f);
 
-            systemTurn.MoveEndSpawnEnemy();
+            systemTurn.MoveEndBallEnemy();
         }
     }
 }
