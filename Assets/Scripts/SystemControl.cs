@@ -122,6 +122,9 @@ namespace SH
                 StartCoroutine(SpawnBall());               
             }
         }
+
+        [SerializeField, Header("發射彈珠音效")]
+        private AudioClip soundShoot;
         /// <summary>
         /// 生成彈珠附帶間隔時間
         /// </summary>
@@ -142,6 +145,8 @@ namespace SH
                 // 暫存彈珠 取得鋼體元件 添加推力 (角色.前方 * 速度)
                 // transform.forward 角色的前方
                 tempBall.GetComponent<Rigidbody>().AddForce(transform.forward * speedBall);
+
+                SystemSound.intance.PlaySound(soundShoot, new Vector2(0.7f, 1.2f));
 
                 total--;
 

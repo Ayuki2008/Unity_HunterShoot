@@ -88,6 +88,12 @@ namespace SH
                 Destroy(hits[0].gameObject);
             }
         }
+
+        [SerializeField, Header("受傷音效")]
+        private AudioClip soundHurt;
+        [SerializeField, Header("死亡音效")]
+        private AudioClip soundDead;
+
         private void GetDamage(float getDamage)
         {
             hp -= getDamage;
@@ -98,6 +104,8 @@ namespace SH
             SystemDamage tempDamage = Instantiate(goDamage, pos, Quaternion.Euler(45, 0, 0)).GetComponent<SystemDamage>();
             tempDamage.damage = getDamage;
 
+            SystemSound.intance.PlaySound(soundHurt, new Vector2(0.7f, 1.2f));
+
             if (hp <= 0) Dead();
         }
 
@@ -106,6 +114,8 @@ namespace SH
         ///</summary>
         private void Dead()
         {
+            SystemSound.intance.PlaySound(soundDead, new Vector2(0.7f, 1.2f));
+
             if (isPlayer) systemFinal.ShowFinalAndUpdateSubTitle("OVER");
             else
             {
